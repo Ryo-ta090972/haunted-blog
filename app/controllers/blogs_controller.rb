@@ -5,6 +5,7 @@ class BlogsController < ApplicationController
 
   before_action :set_blog, only: %i[show edit update destroy]
   before_action :allow_current_user, only: %i[edit update destroy]
+  before_action :filter_secret_blog, only: %i[show]
 
   def index
     @blogs = Blog.search(params[:term]).published.default_order
@@ -54,5 +55,10 @@ class BlogsController < ApplicationController
 
   def allow_current_user
     current_user.blogs.find(params[:id])
+  end
+
+  def filter_secret_blog
+    blog = Blog.find(params[:id])
+    Blog.find_by!(id: params[:id], secret: false) if !user_signed_in? || blog.user_id != current_user.id
   end
 end
