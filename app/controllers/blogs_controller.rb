@@ -50,9 +50,9 @@ class BlogsController < ApplicationController
   end
 
   def blog_params
-    strong_parameter = %i[title content secret]
-    strong_parameter << :random_eyecatch if current_user.premium?
-    params.require(:blog).permit(strong_parameter)
+    blog_attributes = %i[title content secret]
+    blog_attributes << :random_eyecatch if current_user.premium?
+    params.require(:blog).permit(blog_attributes)
   end
 
   def allow_action_for_self_blog
