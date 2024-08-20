@@ -4,7 +4,7 @@ class BlogsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
 
   before_action :set_blog, only: %i[show edit update destroy]
-  before_action :allow_current_user, only: %i[edit update destroy]
+  before_action :allow_action_for_self_blog, only: %i[edit update destroy]
   before_action :filter_secret_blog, only: %i[show]
 
   def index
@@ -55,7 +55,7 @@ class BlogsController < ApplicationController
     params.require(:blog).permit(strong_parameter)
   end
 
-  def allow_current_user
+  def allow_action_for_self_blog
     current_user.blogs.find(params[:id])
   end
 
