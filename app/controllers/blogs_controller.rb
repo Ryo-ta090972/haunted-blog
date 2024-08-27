@@ -10,9 +10,8 @@ class BlogsController < ApplicationController
   end
 
   def show
-    blog = Blog.find(params[:id])
-    is_current_user_blog = user_signed_in? && blog.user_id == current_user.id
-    @blog = is_current_user_blog ? blog : Blog.find_by!(id: params[:id], secret: false)
+    is_current_user_blog = user_signed_in? && current_user.blogs.any? { |blog| blog.id.to_s == params[:id] }
+    @blog = is_current_user_blog ? Blog.find(params[:id]) : Blog.find_by!(id: params[:id], secret: false)
   end
 
   def new
